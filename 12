@@ -1,0 +1,8 @@
+turmas = int(input("Digite a quantidade de turmas: "))
+total_alunos = int(input("Digite a quantidade total de alunos: "))
+
+media = total_alunos / turmas
+print(f"Média de alunos por turma: {media:.2f}")
+
+if media > 40:
+    print("Atenção: alguma turma tem mais de 40 alunos!")
