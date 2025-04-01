@@ -1,0 +1,9 @@
+n = int(input("Digite um número ímpar: "))
+
+if n % 2 == 0:
+    print("O número precisa ser ímpar.")
+else:
+    anterior = (n - 2) ** 2
+    proximo = (n + 2) ** 2
+    diferenca = proximo - anterior
+    print(f"Diferença: {diferenca}")
