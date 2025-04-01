@@ -1,0 +1,7 @@
+cenario_historia = input("Qual o cenário da história? ")
+personagem_principal = input("Quem é o personagem principal? ")
+objeto_encontrado = input("O que o personagem encontrou? ")
+local_objeto_encontrado = input("Onde estava a coisa que ele encontrou? ")
+
+historia_gerada = f"{personagem_principal} estava {cenario_historia} quando se deparou com {objeto_encontrado} {local_objeto_encontrado}."
+print(historia_gerada)
