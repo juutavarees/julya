@@ -1,0 +1,35 @@
+class SistemaBancario:
+    def __init__(self):
+        self.usuarios = {}
+        self.transacoes = []
+
+    def criar_usuario(self, usuario, senha):
+        self.usuarios[usuario] = {'senha': senha, 'saldo': 0}
+
+    def login(self, usuario, senha):
+        if usuario in self.usuarios and self.usuarios[usuario]['senha'] == senha:
+            return True
+        return False
+
+    def deposito(self, usuario, valor):
+        self.usuarios[usuario]['saldo'] += valor
+        self.transacoes.append(f"Depósito de R${valor} para {usuario}")
+
+    def saque(self, usuario, valor):
+        if self.usuarios[usuario]['saldo'] >= valor:
+            self.usuarios[usuario]['saldo'] -= valor
+            self.transacoes.append(f"Saque de R${valor} para {usuario}")
+        else:
+            print("Saldo insuficiente.")
+
+    def exibir_transacoes(self):
+        for transacao in self.transacoes:
+            print(transacao)
+
+# Exemplo de uso:
+banco = SistemaBancario()
+banco.criar_usuario('joao', 'senha123')
+if banco.login('joao', 'senha123'):
+    banco.deposito('joao', 500)
+    banco.saque('joao', 100)
+    banco.exibir_transacoes()
