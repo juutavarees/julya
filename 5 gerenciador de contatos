@@ -1,0 +1,41 @@
+import json
+
+class GerenciadorDeContatos:
+    def __init__(self, arquivo):
+        self.arquivo = arquivo
+        self.contatos = self.carregar_contatos()
+
+    def carregar_contatos(self):
+        try:
+            with open(self.arquivo, 'r') as f:
+                return json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return []
+
+    def salvar_contatos(self):
+        with open(self.arquivo, 'w') as f:
+            json.dump(self.contatos, f, indent=4)
+
+    def adicionar_contato(self, nome, telefone, email):
+        contato = {
+            'nome': nome,
+            'telefone': telefone,
+            'email': email
+        }
+        self.contatos.append(contato)
+        self.salvar_contatos()
+
+    def buscar_contato(self, nome):
+        for contato in self.contatos:
+            if contato['nome'] == nome:
+                return contato
+        return None
+
+# Exemplo de uso:
+contatos = GerenciadorDeContatos('contatos.json')
+contatos.adicionar_contato('João', '123456789', 'joao@example.com')
+contato = contatos.buscar_contato('João')
+if contato:
+    print(contato)
+else:
+    print("Contato não encontrado.")
