@@ -1,0 +1,30 @@
+class SistemaDeReservas:
+    def __init__(self, assentos):
+        self.assentos = assentos
+
+    def visualizar_mapa(self):
+        for i, linha in enumerate(self.assentos):
+            print(f"Linha {i + 1}: " + " ".join(["X" if reserva else "O" for reserva in linha]))
+
+    def reservar_assento(self, linha, assento):
+        if not self.assentos[linha][assento]:
+            self.assentos[linha][assento] = True
+            print("Reserva realizada com sucesso!")
+        else:
+            print("Assento já reservado.")
+
+    def cancelar_reserva(self, linha, assento):
+        if self.assentos[linha][assento]:
+            self.assentos[linha][assento] = False
+            print("Reserva cancelada com sucesso!")
+        else:
+            print("Este assento não está reservado.")
+
+# Exemplo de uso:
+mapa_assentos = [[False] * 5 for _ in range(5)]  # 5 linhas, 5 assentos por linha
+reservas = SistemaDeReservas(mapa_assentos)
+reservas.visualizar_mapa()
+reservas.reservar_assento(0, 2)
+reservas.visualizar_mapa()
+reservas.cancelar_reserva(0, 2)
+reservas.visualizar_mapa()
