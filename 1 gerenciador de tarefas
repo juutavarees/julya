@@ -1,0 +1,47 @@
+import json
+from datetime import datetime
+
+class GerenciadorDeTarefas:
+    def __init__(self, arquivo):
+        self.arquivo = arquivo
+        self.tarefas = self.carregar_tarefas()
+
+    def carregar_tarefas(self):
+        try:
+            with open(self.arquivo, 'r') as f:
+                return json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return []
+
+    def salvar_tarefas(self):
+        with open(self.arquivo, 'w') as f:
+            json.dump(self.tarefas, f, indent=4)
+
+    def adicionar_tarefa(self, descricao, prazo):
+        tarefa = {
+            'descricao': descricao,
+            'prazo': prazo,
+            'concluida': False
+        }
+        self.tarefas.append(tarefa)
+        self.salvar_tarefas()
+
+    def listar_tarefas(self):
+        tarefas_ordenadas = sorted(self.tarefas, key=lambda t: datetime.strptime(t['prazo'], "%Y-%m-%d"))
+        for tarefa in tarefas_ordenadas:
+            status = 'Concluída' if tarefa['concluida'] else 'Pendente'
+            print(f"{tarefa['descricao']} | Prazo: {tarefa['prazo']} | Status: {status}")
+
+    def marcar_como_concluida(self, descricao):
+        for tarefa in self.tarefas:
+            if tarefa['descricao'] == descricao:
+                tarefa['concluida'] = True
+                self.salvar_tarefas()
+                break
+
+# Exemplo de uso:
+gerenciador = GerenciadorDeTarefas('tarefas.json')
+gerenciador.adicionar_tarefa('Estudar para a prova', '2025-04-30')
+gerenciador.listar_tarefas()
+gerenciador.marcar_como_concluida('Estudar para a prova')
+gerenciador.listar_tarefas()
