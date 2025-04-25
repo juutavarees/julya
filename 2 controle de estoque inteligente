@@ -1,0 +1,38 @@
+import json
+
+class ControleDeEstoque:
+    def __init__(self, arquivo):
+        self.arquivo = arquivo
+        self.produtos = self.carregar_produtos()
+
+    def carregar_produtos(self):
+        try:
+            with open(self.arquivo, 'r') as f:
+                return json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return []
+
+    def salvar_produtos(self):
+        with open(self.arquivo, 'w') as f:
+            json.dump(self.produtos, f, indent=4)
+
+    def adicionar_produto(self, nome, quantidade, preco):
+        produto = {
+            'nome': nome,
+            'quantidade': quantidade,
+            'preco': preco
+        }
+        self.produtos.append(produto)
+        self.salvar_produtos()
+
+    def exibir_produtos(self):
+        total_estoque = 0
+        for produto in self.produtos:
+            print(f"{produto['nome']} | Quantidade: {produto['quantidade']} | Preço: R${produto['preco']}")
+            total_estoque += produto['quantidade'] * produto['preco']
+        print(f"Valor total do estoque: R${total_estoque}")
+
+# Exemplo de uso:
+estoque = ControleDeEstoque('estoque.json')
+estoque.adicionar_produto('Produto A', 10, 20.0)
+estoque.exibir_produtos()
