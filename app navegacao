@@ -1,0 +1,178 @@
+from flask import Flask, render_template_string
+
+app = Flask(__name__)
+
+# Lista de novas receitas
+receitas = [
+    {
+        'nome': 'Risoto de Cogumelos',
+        'descricao': 'Prato italiano cremoso feito com arroz arbório e cogumelos frescos.',
+        'ingredientes': ['Arroz arbório', 'Cogumelos frescos', 'Caldo de legumes', 'Cebola', 'Alho', 'Parmesão', 'Vinho branco'],
+        'modo_preparo': 'Refogue a cebola e o alho, adicione o arroz e o vinho, vá colocando o caldo aos poucos, mexendo sempre, finalize com cogumelos salteados e parmesão.'
+    },
+    {
+        'nome': 'Sushi de Salmão',
+        'descricao': 'Rolinhos de arroz com salmão cru, típicos da culinária japonesa.',
+        'ingredientes': ['Arroz para sushi', 'Vinagre de arroz', 'Salmão fresco', 'Nori (alga)', 'Shoyu', 'Gengibre'],
+        'modo_preparo': 'Cozinhe o arroz e tempere com vinagre, coloque sobre a alga, adicione o salmão, enrole e corte em pedaços.'
+    },
+    {
+        'nome': 'Feijoada Completa',
+        'descricao': 'Tradicional prato brasileiro com feijão preto e carnes variadas.',
+        'ingredientes': ['Feijão preto', 'Linguiça', 'Carne seca', 'Costelinha', 'Alho', 'Cebola', 'Folha de louro'],
+        'modo_preparo': 'Cozinhe as carnes separadamente, depois junte com o feijão e temperos, cozinhe até ficar encorpado.'
+    },
+    {
+        'nome': 'Lasanha à Bolonhesa',
+        'descricao': 'Prato italiano com camadas de massa, molho à bolonhesa e queijo.',
+        'ingredientes': ['Massa para lasanha', 'Molho bolonhesa', 'Molho branco', 'Queijo muçarela', 'Parmesão ralado'],
+        'modo_preparo': 'Monte camadas alternando molho e massa, finalize com queijo e leve ao forno para gratinar.'
+    },
+    {
+        'nome': 'Pad Thai',
+        'descricao': 'Massa de arroz frita com legumes, ovo, camarão e molho típico tailandês.',
+        'ingredientes': ['Macarrão de arroz', 'Camarão', 'Ovo', 'Broto de feijão', 'Amendoim', 'Molho de tamarindo'],
+        'modo_preparo': 'Frite o ovo, adicione os camarões, o macarrão e os legumes, tempere com molho e finalize com amendoim.'
+    }
+]
+
+# HTML e CSS embutidos
+HTML_TEMPLATE = """
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receitas Internacionais</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fffbea;
+            color: #333;
+        }
+
+        header {
+            text-align: center;
+            background-color: #ff6f61;
+            color: white;
+            padding: 20px;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #ff6f61;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Receitas Internacionais Deliciosas</h1>
+    </header>
+    <main>
+        <h2>Confira nossas receitas:</h2>
+        <ul>
+            {% for receita in receitas %}
+                <li>
+                    <a href="/receita/{{ receita['nome'] }}">
+                        {{ receita['nome'] }}
+                    </a> - {{ receita['descricao'] }}
+                </li>
+            {% endfor %}
+        </ul>
+    </main>
+</body>
+</html>
+"""
+
+RECEITA_TEMPLATE = """
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ receita['nome'] }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fffbea;
+            color: #333;
+        }
+
+        header {
+            text-align: center;
+            background-color: #ff6f61;
+            color: white;
+            padding: 20px;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #ff6f61;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>{{ receita['nome'] }}</h1>
+    </header>
+    <main>
+        <p><strong>Descrição:</strong> {{ receita['descricao'] }}</p>
+        <h3>Ingredientes:</h3>
+        <ul>
+            {% for ingrediente in receita['ingredientes'] %}
+                <li>{{ ingrediente }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Modo de Preparo:</h3>
+        <p>{{ receita['modo_preparo'] }}</p>
+        <a href="/">Voltar para a página inicial</a>
+    </main>
+</body>
+</html>
+"""
+
+@app.route('/')
+def home():
+    return render_template_string(HTML_TEMPLATE, receitas=receitas)
+
+@app.route('/receita/<nome_receita>')
+def receita(nome_receita):
+    receita_encontrada = next((r for r in receitas if r['nome'] == nome_receita), None)
+    return render_template_string(RECEITA_TEMPLATE, receita=receita_encontrada)
+
+if __name__ == '__main__':
+    app.run(debug=True)
